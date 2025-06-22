@@ -4,12 +4,12 @@ This is a web-application intended for generating crossword puzzles. It was made
 
 ## Getting Started
 
-To run the program:
-Git clone the repository
-Generate a postgreSQL database from the backup
-Set up .env and .env.local variables for auth.js (auth keys) and Prisma + Postgres DB connection
+To run the program:  
+Git clone the repository  
+Generate a postgreSQL database from the backup  
+Set up .env and .env.local variables for auth.js (auth keys) and Prisma + Postgres DB connection  
 
-Run:
+Into your bash / command prompt enter the install directory and run:
 ```bash
 npm install
 npm run dev
