@@ -1,0 +1,83 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Crossword {
+  id          Int           @id
+  createTime  DateTime      @db.Timestamp(6)
+  publishTime DateTime?     @db.Timestamp(6)
+  creatorId   String
+  grid        Json          @db.Json
+  User        User          @relation(fields: [creatorId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FKcreatorID")
+  Playthrough Playthrough[]
+}
+
+model Playthrough {
+  playerID    String
+  crosswordID Int
+  rating      Int?
+  playtime    Int?
+  finished    Boolean?
+  grid        Json      @db.Json
+  Crossword   Crossword @relation(fields: [crosswordID], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "CrosswordIDFK")
+  User        User      @relation(fields: [playerID], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "PlayerIDFK")
+
+  @@id([playerID, crosswordID])
+}
+
+model User {
+  id            String        @id @default(cuid())
+  name          String?
+  email         String        @unique
+  emailVerified DateTime?
+  image         String?
+  handle        String?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  accounts      Account[]
+  Crossword     Crossword[]
+  Playthrough   Playthrough[]
+  sessions      Session[]
+}
+
+model Account {
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([provider, providerAccountId])
+}
+
+model Session {
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String
+  expires    DateTime
+
+  @@id([identifier, token])
+}
