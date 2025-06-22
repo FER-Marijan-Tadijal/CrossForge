@@ -1,0 +1,4 @@
+AUTH_SECRET="Do npx auth" # Added by `npx auth`. Read more: https://cli.authjs.dev
+
+AUTH_GITHUB_ID=ReplaceWithID
+AUTH_GITHUB_SECRET=ReplaceWithSecret
